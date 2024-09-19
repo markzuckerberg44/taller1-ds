@@ -4,29 +4,29 @@
 #pragma once
 #ifndef MATERIALBIBLIOGRAFICO_H
 #define MATERIALBIBLIOGRAFICO_H
-#include <iostream>
 #include <string>
 using namespace std;
 
 
 class MaterialBibliografico {
 private:
-    string nombre, isbn, autor;
+    string nombre;
+    string isbn;
+    string autor;
     bool estado;
 public:
-    MaterialBibliografico(string &nombre, string &isbn, string &autor, bool estado);
 
-    // metodo para mostrar informacion de los objetos
+    MaterialBibliografico(string nombre, string isbn, string autor, bool estado);
     virtual void mostrarInformacion() const;
 
     // getters y setters
-    string& getNombre();
-    void set_nombre(const string &nombre);
-    string& getIsbn();
-    void set_isbn(const string &isbn);
-    string& getAutor();
-    void set_autor(const string &autor);
-    bool& getEstado();
+    string get_nombre();
+    void set_nombre(string nombre);
+    string get_isbn();
+    void set_isbn(string isbn);
+    string get_autor();
+    void set_autor(string autor);
+    bool get_estado();
     void set_estado(bool estado);
 
     // destructor

@@ -18,22 +18,17 @@ public:
 
     // constructor
 
-    Libro(string &nombre, string &isbn, string &autor, bool estado, const string &fecha_publicacion,
-        const string &resumen)
-        : MaterialBibliografico(nombre, isbn, autor, estado),
-          fechaPublicacion(fecha_publicacion),
-          resumen(resumen) {
-    }
+    Libro(string nombre, string isbn, string autor, bool estado, string fechaPublicacion, string resumen);
 
     // mostrar informacion
 
     void mostrarInformacion() const override;
 
     // getters y setters
-    string & get_fechapublicacion();
-    void set_fecha_publicacion(const string &fecha_publicacion);
-    string & get_resumen();
-    void set_resumen(const string &resumen);
+    string get_fechapublicacion();
+    void set_fecha_publicacion(string fecha_publicacion);
+    string get_resumen();
+    void set_resumen(string resumen);
 
 
 

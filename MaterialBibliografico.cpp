@@ -4,59 +4,50 @@
 
 #include <string>
 #include "MaterialBibliografico.h"
-
+#include <iostream>
 using namespace std;
 
 
-MaterialBibliografico::MaterialBibliografico(string &nombre, string &isbn, string &autor, bool estado) {
+MaterialBibliografico::MaterialBibliografico(string nombre, string isbn, string autor, bool estado) {
     this -> nombre = nombre;
     this -> isbn = isbn;
     this -> autor = autor;
     this -> estado = estado;
 }
 
+
 void MaterialBibliografico::mostrarInformacion() const {
-    cout << nombre << endl;
-    cout << isbn << endl;
-    cout << autor << endl;
-
-    // dejamos el estado del libro en un lenguaje mas amigable
-
-    if (estado == true) {
-        cout << "Disponible" << endl;
-    } else if (estado == false) {
-        cout << "Prestado" << endl;
-    } else { // control de errores
-        cout << "Error al buscar estado / Estado no encontrado" << endl;
-    }
-
+    cout << "Nombre: " << nombre << endl;
+    cout << "ISBN: " << isbn << endl;
+    cout << "Autor: " << autor << endl;
+    cout << "Estado: " << (estado ? "Disponible" : "Prestado") << endl;
 }
 
-string & MaterialBibliografico::getNombre() {
+string MaterialBibliografico::get_nombre() {
     return nombre;
 }
 
-void MaterialBibliografico::set_nombre(const string &nombre) {
-    this->nombre = nombre;
+void MaterialBibliografico::set_nombre(string nombre) {
+    this -> nombre = nombre;
 }
 
-string & MaterialBibliografico::getIsbn() {
+string MaterialBibliografico::get_isbn() {
     return isbn;
 }
 
-void MaterialBibliografico::set_isbn(const string &isbn) {
-    this->isbn = isbn;
+void MaterialBibliografico::set_isbn(string isbn) {
+    this -> isbn = isbn;
 }
 
-string & MaterialBibliografico::getAutor() {
+string MaterialBibliografico::get_autor() {
     return autor;
 }
 
-void MaterialBibliografico::set_autor(const string &autor) {
-    this->autor = autor;
+void MaterialBibliografico::set_autor(string autor) {
+    this -> autor = autor;
 }
 
-bool & MaterialBibliografico::getEstado() {
+bool MaterialBibliografico::get_estado() {
     return estado;
 }
 

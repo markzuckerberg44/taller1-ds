@@ -2,54 +2,40 @@
 #include <string>
 #include "MaterialBibliografico.h"
 #include "BibliotecaUtils.h"
+
 using namespace std;
 
+void menu() {
+    BibliotecaUtils* biblioteca_utils = new BibliotecaUtils();
 
-// menu interactivo
-void menu () {
-    BibliotecaUtils biblioteca_utils;
-    cout << "---- Gestor de biblioteca ----" << endl;
-    cout << "(1) Agregar Material\n(2) Mostrar Informacion\n(3) Buscar Material\n(4) Prestar y Devolver Material\n(5) Gestion de Usuarios\n(0) Salir\n";
-    cout << "Elige una opcion:";
+    while (true) {
+        cout << "---- Gestor de biblioteca ----" << endl;
+        cout << "(1) Agregar Material\n(2) Mostrar Informacion\n(3) Buscar Material\n(4) Prestar y Devolver Material\n(5) Gestion de Usuarios\n(0) Salir\n";
+        cout << "Elige una opcion: ";
 
-    int option;
-    cin >> option;
+        int option;
+        cin >> option;
 
-    switch (option) {
-        case 1:
+        if (option == 1) {
+
             // agregar material
+            biblioteca_utils -> agregarMaterial();
 
-            biblioteca_utils.agregarMaterial();
-            break;
-        case 2:
-            // mostrar info
-            cout << "nigger" << endl;
+        } else if (option == 2) {
+            biblioteca_utils -> mostrarInfoMateriales();
 
-            break;
-        case 3:
-            // buscar material
-            cout << "nigger" << endl;
-            break;
-        case 4:
-            // gestionar material (prestar y devolver)
+        } else if (option == 3){
 
-            cout << "nigger" << endl;
-            break;
-        case 5:
-            // gestion de usuarios
+        } else if (option == 4) {
 
-            cout << "nigger" << endl;
-            break;
-        case 0:
-            // salir
-            cout << "programada cerrado exitosamente" << endl;
-            exit(0);
+        } else if (option == 5) {
 
-        default:
-            cout << "Elija una opcion valida" << endl;
-            break;
+        } else if (option == 0) {
+
+        }
+
+
     }
-
 }
 
 int main() {

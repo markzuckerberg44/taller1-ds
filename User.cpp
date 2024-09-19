@@ -4,7 +4,7 @@
 #include "MaterialBibliografico.h"
 #include "Libro.h"
 #include "User.h"
-
+#include <iostream>
 // implementacion metodos
 
 void User::prestarMaterial() {
