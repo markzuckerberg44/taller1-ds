@@ -67,10 +67,6 @@ void BibliotecaUtils::agregarMaterial() {
 
     }
 
-
-
-
-
 }
 
 void BibliotecaUtils::mostrarInfoMateriales() {
@@ -82,7 +78,7 @@ void BibliotecaUtils::mostrarInfoMateriales() {
     }
 }
 
-MaterialBibliografico* BibliotecaUtils::buscarObj() {
+void BibliotecaUtils::buscarObj() {
 
     string titulo, autor;
     int opcion;
@@ -101,7 +97,7 @@ MaterialBibliografico* BibliotecaUtils::buscarObj() {
                 if (biblioteca[i]->get_nombre() == titulo) {
                     biblioteca[i]->mostrarInformacion();
                     cout << "-------------------" << endl;
-                    break;
+                    //break;
                 }
             }
         }
@@ -116,7 +112,7 @@ MaterialBibliografico* BibliotecaUtils::buscarObj() {
                 if (biblioteca[j]->get_autor() == autor) {
                     biblioteca[j]->mostrarInformacion();
                     cout << "-------------------" << endl;
-                    break;
+                    //break;
                 }
             }
         }
