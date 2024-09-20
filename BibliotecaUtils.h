@@ -1,9 +1,9 @@
 //
 // Created by julih on 17-09-2024.
+// Modified by Angel on 20-09-2024.
 //
 
-#ifndef BIBLIOTECAUTILS_H
-#define BIBLIOTECAUTILS_H
+#pragma once
 #include <iostream>
 #include <string>
 #include "MaterialBibliografico.h"
@@ -22,17 +22,12 @@ private:
     int numMateriales = 0;
 
 public:
-
     void agregarMaterial();
     void mostrarInfoMateriales();
     void buscarObj();
-    void buscarMaterial();
     void gestionMateriales();
     void gestionUsuarios();
 
-
+    int validarNumero();
 };
 
-
-
-#endif //BIBLIOTECAUTILS_H

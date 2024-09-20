@@ -1,9 +1,8 @@
 //
 // Created by julih on 16-09-2024.
+// Modific by Angel on 20-09-2024
 //
-
-#ifndef USER_H
-#define USER_H
+#pragma once
 #include "MaterialBibliografico.h"
 #include <string>
 using namespace std;
@@ -14,13 +13,16 @@ class User {
 private:
     string nombre;
     int id;
-    MaterialBibliografico* materialesPrestados[5] = {nullptr};
-
+    MaterialBibliografico* materialesPrestados[5];
 public:
+    //contructor de la clase
+    User(string nombre, int id);
+
     // metodos
-    void prestarMaterial();
-    void devolverMaterial();
+    void prestarMaterial(MaterialBibliografico* material);
+    void devolverMaterial(string isbn);
     void mostrarMaterialesPrestados();
+    void devolverTodosLosMateriales();
 
     // getters  y setters
     string &get_nombre();
@@ -29,7 +31,3 @@ public:
     void set_id(int id);
 
 };
-
-
-
-#endif //USER_H

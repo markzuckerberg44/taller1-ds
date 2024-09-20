@@ -2,8 +2,7 @@
 // Created by julih on 16-09-2024.
 //
 
-#ifndef REVISTA_H
-#define REVISTA_H
+#pragma once
 #include "MaterialBibliografico.h"
 
 
@@ -28,6 +27,3 @@ public:
     ~Revista();
 };
 
-
-
-#endif //REVISTA_H

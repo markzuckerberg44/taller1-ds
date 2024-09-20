@@ -2,8 +2,7 @@
 // Created by julih on 16-09-2024.
 //
 
-#ifndef LIBRO_H
-#define LIBRO_H
+#pragma once
 #include "MaterialBibliografico.h"
 
 
@@ -35,5 +34,3 @@ public:
 };
 
 
-
-#endif //LIBRO_H
