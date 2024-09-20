@@ -74,7 +74,7 @@ void BibliotecaUtils::agregarMaterial() {
 }
 
 void BibliotecaUtils::mostrarInfoMateriales() {
-    for (int l = 0; l<100 ; l++) {
+    for (int l = 0; l < 100 ; l++) {
         if (biblioteca[l] != nullptr) {
             biblioteca[l]->mostrarInformacion();
             cout << "--------------------" << endl;
@@ -82,7 +82,48 @@ void BibliotecaUtils::mostrarInfoMateriales() {
     }
 }
 
-MaterialBibliografico * BibliotecaUtils::buscarObj() {
+MaterialBibliografico* BibliotecaUtils::buscarObj() {
+
+    string titulo, autor;
+    int opcion;
+    cout << "En base a que deseas buscar?:\n(1) Titulo\n(2) Autor\n";
+    cout << ">";
+    cin >> opcion;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpiar buffer
+
+    if (opcion == 1) {
+        // titulo
+        cout << "Ingrese titulo:";
+        getline(cin, titulo);
+
+        for (int i = 0 ; i < 100 ; i++) {
+            if (biblioteca[i] != nullptr) {
+                if (biblioteca[i]->get_nombre() == titulo) {
+                    biblioteca[i]->mostrarInformacion();
+                    cout << "-------------------" << endl;
+                    break;
+                }
+            }
+        }
+
+    } else if (opcion == 2) {
+
+        cout << "Ingrese autor:";
+        getline(cin, autor);
+
+        for (int j = 0 ; j < 100 ; j++) {
+            if (biblioteca[j] != nullptr) {
+                if (biblioteca[j]->get_autor() == autor) {
+                    biblioteca[j]->mostrarInformacion();
+                    cout << "-------------------" << endl;
+                    break;
+                }
+            }
+        }
+
+    } else {
+        cout << "Ingrese una opcion valida" << endl;
+    }
 
 
 }
