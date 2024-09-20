@@ -27,6 +27,7 @@ void menu() {
             biblioteca_utils -> mostrarInfoMateriales();
 
         } else if (option == 3){
+            // buscar material
             biblioteca_utils->buscarObj();
 
         } else if (option == 4) {
@@ -34,10 +35,15 @@ void menu() {
         } else if (option == 5) {
 
         } else if (option == 0) {
-
+            cout << "Saliendo del programa..." << endl;
+            exit(0);
+        } else {
+            cout << "Opcion no valida" << endl;
         }
 
     }
+
+
 }
 
 int main() {

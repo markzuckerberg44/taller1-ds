@@ -25,7 +25,7 @@ public:
 
     void agregarMaterial();
     void mostrarInfoMateriales();
-    MaterialBibliografico* buscarObj();
+    void buscarObj();
     void buscarMaterial();
     void gestionMateriales();
     void gestionUsuarios();
