@@ -2,8 +2,6 @@
 // Created by terry davis on 16-09-2024.
 //
 #pragma once
-#ifndef MATERIALBIBLIOGRAFICO_H
-#define MATERIALBIBLIOGRAFICO_H
 #include <string>
 using namespace std;
 
@@ -35,5 +33,3 @@ public:
 };
 
 
-
-#endif //MATERIALBIBLIOGRAFICO_H
