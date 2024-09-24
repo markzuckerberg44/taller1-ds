@@ -96,3 +96,8 @@ int &User::get_id() {
 void User::set_id(int id) {
     this -> id = id;
 }
+
+User::~User() {
+    cout<<"Usuario destruido"<<endl;
+}
+

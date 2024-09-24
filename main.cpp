@@ -7,7 +7,15 @@
 using namespace std;
 
 // verifica que entre un entero, en caso de que sea un string muestra el mensaje de valor invalido
-
+int validarNumero() {
+    int n;
+    while (!(cin>>n)) {
+        cin.clear();
+        cin.ignore(1000,'\n');
+        cout<<"valor ingresado invalido, favor de ingresar un numero entero: "<<endl;
+    }
+    return n;
+}
 
 void menu() {
     BibliotecaUtils* biblioteca_utils = new BibliotecaUtils();
@@ -18,7 +26,7 @@ void menu() {
         cout << "(1) Agregar Material\n(2) Mostrar Informacion\n(3) Buscar Material\n(4) Prestar y Devolver Material\n(5) Gestion de Usuarios\n(0) Salir"<<endl;
         cout << "Elige una opcion: ";
 
-        option = biblioteca_utils->validarNumero();
+        option = validarNumero();
 
 
         switch (option) {

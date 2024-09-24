@@ -28,6 +28,5 @@ public:
     void gestionMateriales();
     void gestionUsuarios();
 
-    int validarNumero();
 };
 

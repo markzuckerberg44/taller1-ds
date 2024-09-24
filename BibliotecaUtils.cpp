@@ -8,19 +8,38 @@
 #include <string>
 #include <limits>
 
-//retorna puntero de libro si lo encuentra por el isbn
-MaterialBibliografico* busquedaPorIsbn(string isbn,MaterialBibliografico* biblioteca[]){
+//retorna puntero de libro o revista si lo encuentra por el nombre
+MaterialBibliografico* buscarPorNombre(string nombre,MaterialBibliografico* biblioteca[]){
     int c=0;
     for(int i = 0; i < 100; i++) {
         if(biblioteca[i] != nullptr) {
             c++;
-            if(biblioteca[i]->get_isbn()==isbn) {
+            if(biblioteca[i]->get_nombre()==nombre) {
                 return biblioteca[i];
             }
         }
     }
     if(c>0) {
-        cout<<"Isbn inexistente"<<endl;
+        cout<<"Libro inexistente"<<endl;
+    }else {
+        cout<<"No hay materiales por el momento"<<endl;
+    }
+
+    return nullptr;
+}
+//retorna puntero de libro o revista si lo encuntra por autor
+MaterialBibliografico* buscarPorAutor(string autor,MaterialBibliografico* biblioteca[]) {
+    int c=0;
+    for(int i = 0; i < 100; i++) {
+        if(biblioteca[i] != nullptr) {
+            c++;
+            if(biblioteca[i]->get_autor()==autor) {
+                return biblioteca[i];
+            }
+        }
+    }
+    if(c>0) {
+        cout<<"Autor inexistente"<<endl;
     }else {
         cout<<"No hay materiales por el momento"<<endl;
     }
@@ -40,27 +59,43 @@ int busquedaPorId(int id,vector<User>& users) {
 }
 
 // verifica que entre un entero, en caso de que sea un string muestra el mensaje de valor invalido
-int BibliotecaUtils::validarNumero() {
+int validarNumeroBiblioteca() {
     int numero=0;
     while (!(cin>>numero)) {
         cin.clear();
         cin.ignore(1000,'\n');
         cout<<"valor ingresado invalido, favor de ingresar un numero entero: "<<endl;
     }
-    cin.ignore();//limpiar buffer
     return numero;
-
 }
+
+// funcion complementaria para prestamos o devolucion de materiales
+int opcionDeBusqueda() {
+    int opcion=0;
+    cout <<"(1) Titulo\n(2) Autor\n";
+    cout << ">";
+    opcion = validarNumeroBiblioteca();
+    int cont =0;
+    do {
+        if(cont>0) {
+            cout<<"Valor ingresado invalido, por favor ingrese un valor entero entre 1 o 2"<<endl;
+            opcion = validarNumeroBiblioteca();
+        }
+        cont++;
+    }while (opcion<1||opcion>2);
+    return opcion;
+}
+
 
 void BibliotecaUtils::agregarMaterial() {
     string name, isbn, author, published, resumen;
     int numEdicion, mesPublicacion;
 
-    cout <<"(1) Libro\n(2) Revista" << endl;
-    cout << "Elige una opcion: ";
-    int tipo;
-    tipo = validarNumero();
 
+    int tipo=0;
+    cout<<"Escoga el tipo de material a ingresar: "<<endl;
+    tipo = opcionDeBusqueda();
+    cin.ignore(1000,'\n');
     switch (tipo) {
         case 1:
             cout << "Nombre: ";
@@ -123,67 +158,53 @@ void BibliotecaUtils::mostrarInfoMateriales() {
 
 void BibliotecaUtils::buscarObj() {
 
+    MaterialBibliografico* obj;
     string titulo, autor;
-    int opcion;
-    cout << "En base a que deseas buscar?:\n(1) Titulo\n(2) Autor\n";
-    cout << ">";
-    opcion = validarNumero();
+    int opcion=0;
+    cout<<"En base a que desea buscar?"<<endl;
+    opcion = opcionDeBusqueda();
+    cin.ignore(1000,'\n');
 
-    if (opcion == 1) {
-        // titulo
-        cout << "Ingrese titulo:";
-        getline(cin, titulo);
-
-        for (int i = 0 ; i < 100 ; i++) {
-            if (biblioteca[i] != nullptr) {
-                if (biblioteca[i]->get_nombre() == titulo) {
-                    biblioteca[i]->mostrarInformacion();
-                    cout << "-------------------" << endl;
-                    //break;
-                }
-            }
-        }
-
-    } else if (opcion == 2) {
-
-        cout << "Ingrese autor:";
-        getline(cin, autor);
-
-        for (int j = 0 ; j < 100 ; j++) {
-            if (biblioteca[j] != nullptr) {
-                if (biblioteca[j]->get_autor() == autor) {
-                    biblioteca[j]->mostrarInformacion();
-                    cout << "-------------------" << endl;
-                    //break;
-                }
-            }
-        }
-
-    } else {
-        cout << "Ingrese una opcion valida" << endl;
+    switch (opcion) {
+        case 1:
+            // titulo
+            cout << "Ingrese titulo:";
+            getline(cin, titulo);
+            obj = buscarPorNombre(titulo, biblioteca);
+            obj->mostrarInformacion();
+            break;
+        case 2:
+            //autor
+            cout << "Ingrese autor:";
+            getline(cin, autor);
+            obj = buscarPorAutor(autor, biblioteca);
+            obj->mostrarInformacion();
+            break;
+        default:
+        break;
     }
 
 }
 
 
 void BibliotecaUtils::gestionUsuarios() {
-    int option;
+    int option=0;
     string nombre;
-    int id;
+    int id=0;
     int n = 1;
-    bool true_or_false = true;
     cout<<"(1) Crear un usuario"<<endl;
     cout<<"(2) Eliminar un usuario"<<endl;
     cout<<"(3) Buscar un usuario"<<endl;
     cout<<"Elige una opcion: "<<endl;
-    option = validarNumero();
+    option = validarNumeroBiblioteca();
+    cin.ignore(1000,'\n');
     switch (option) {
         case 1:
         cout<<"Nombre: ";
         getline(cin, nombre);
 
         cout<<"\nID: ";
-        id=validarNumero();
+        id=validarNumeroBiblioteca();
         if(users.size()==0) {
             cout<<"Usuario agregado"<<endl;
             users.push_back(User(nombre,id));
@@ -200,7 +221,7 @@ void BibliotecaUtils::gestionUsuarios() {
                 cout<<"No hay usuarios por el momento"<<endl;
             }
             cout<<"Ingrese la ID del usuario: "<<endl;
-            id=validarNumero();
+            id=validarNumeroBiblioteca();
             n=busquedaPorId(id,users);
             if(n>-1) {
                 users[n].devolverTodosLosMateriales();
@@ -214,9 +235,11 @@ void BibliotecaUtils::gestionUsuarios() {
                 cout<<"No hay usuarios por el momento"<<endl;
             }
             cout<<"Ingrese la ID del usuario: "<<endl;
-            id=validarNumero();
+            id=validarNumeroBiblioteca();
+            cin.ignore(1000,'\n');
             n=busquedaPorId(id,users);
-            if(n>-1) {
+
+            if(n>=0) {
                 cout<<"Nombre: "+users[n].get_nombre()<<endl;
                 cout<<"ID: "+users[n].get_id()<<endl;
                 cout<<"Materiales prestados: "<<endl;
@@ -230,10 +253,11 @@ void BibliotecaUtils::gestionUsuarios() {
 }
 
 void BibliotecaUtils::gestionMateriales() {
-    int opcion;
-    string isbn;
-    int id;
-    int indice;
+    int opcion=0;
+    string dato;
+    int id=0;
+    int indice=-1;
+    int n;
     MaterialBibliografico* material;
     if(users.size()==0) {
         cout<<"No hay usuarios por el momento, por lo que no se pueden hacer los cambios"<<endl;
@@ -241,17 +265,27 @@ void BibliotecaUtils::gestionMateriales() {
     }
     cout<<"(1) Prestamo de material"<<endl;
     cout<<"(2) Devolucion de materiales prestados"<<endl;
-    opcion = validarNumero();
+    opcion = validarNumeroBiblioteca();
     switch (opcion) {
         case 1:
-            cout<<"Ingrese el isbn del material: ";
-            getline(cin, isbn);
-            material = busquedaPorIsbn(isbn,biblioteca);
+            cout<<"En base a que deseas buscar?"<<endl;
+            n=opcionDeBusqueda();
+            cin.ignore(1000,'\n');
+            if(n==1) {
+                cout<<"Nombre del material: "<<endl;
+                getline(cin, dato);
+                material=buscarPorNombre(dato,biblioteca);
+            }else {
+                cout<<"Nombre del autor: "<<endl;
+                getline(cin, dato);
+                material=buscarPorAutor(dato,biblioteca);
+            }
             if(material!=nullptr&&material->get_estado()) {
 
                 cout<<"Ingrese la id del usuario al que se va hacer el prestamo: ";
-                id=validarNumero();
+                id=validarNumeroBiblioteca();
                 indice=busquedaPorId(id,users);
+                cin.ignore(1000,'\n');
                 if(indice>-1) {
                     users[indice].prestarMaterial(material);
                 }else {
@@ -261,18 +295,26 @@ void BibliotecaUtils::gestionMateriales() {
             break;
         case 2:
             cout<<"Ingrese la id del usuario al que se va hacer la devolucion: ";
-            id=validarNumero();
+            id=validarNumeroBiblioteca();
             indice=busquedaPorId(id,users);
-            if(indice>-1) {
-                cout<<"Ingrese el isbn del material: ";
-                getline(cin, isbn);
-                material = busquedaPorIsbn(isbn,biblioteca);
-                if(material!=nullptr) {
-                    users[indice].devolverMaterial(isbn);
-                    break;
-                }else{
-                    cout<<"Isbn no existente"<<endl;
-                }
+            cin.ignore(1000,'\n');
+            if(indice==-1) {
+                return;
+            }
+            cout<<"En base a que deseas buscar?"<<endl;
+            n=opcionDeBusqueda();
+            cin.ignore(1000,'\n');
+            if(n==1) {
+                cout<<"Nombre del material: "<<endl;
+                getline(cin, dato);
+                material=buscarPorNombre(dato,biblioteca);
+            }else {
+                cout<<"Nombre del autor: "<<endl;
+                getline(cin, dato);
+                material=buscarPorAutor(dato,biblioteca);
+            }
+            if(material!=nullptr) {
+                users[indice].devolverMaterial(material->get_isbn());
             }
             break;
         default:
