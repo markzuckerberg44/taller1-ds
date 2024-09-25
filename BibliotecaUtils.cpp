@@ -379,11 +379,17 @@ void BibliotecaUtils::guardarEstadoEnArchivo() {
 
     for (int i = 0; i < 100; i++) {
         if (biblioteca[i] != nullptr) {
-            archivo << biblioteca[i]->
+            archivo << biblioteca[i]->type();
             archivo << biblioteca[i]->get_nombre() << ",";
             archivo << biblioteca[i]->get_isbn() << ",";
             archivo << biblioteca[i]->get_autor() << ",";
             archivo << (biblioteca[i]->get_estado() ? "Disponible" : "No disponible") << "\n";
+            if (biblioteca[i]->type() == "libro") {
+                // agregamos los datos extras de libro
+
+            } else {
+                // agregamos los datos extras de revista
+            }
         }
     }
 

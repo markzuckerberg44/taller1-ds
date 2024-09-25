@@ -8,7 +8,12 @@
 Libro::Libro(string nombre, string isbn, string autor, bool estado, string fechaPublicacion, string resumen) : MaterialBibliografico(nombre,isbn,autor,estado){
     this -> fechaPublicacion = fechaPublicacion;
     this -> resumen = resumen;
-    this -> tipo = "libro";
+
+}
+
+string Libro::type() const {
+    MaterialBibliografico::type();
+    return "libro";
 }
 
 void Libro::mostrarInformacion() const {
@@ -33,9 +38,7 @@ void Libro::set_resumen(string resumen) {
     this -> resumen = resumen;
 }
 
-string Libro::get_tipo() {
-    return tipo;
-}
+
 
 Libro::~Libro() {
 }

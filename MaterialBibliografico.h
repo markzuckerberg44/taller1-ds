@@ -16,6 +16,7 @@ public:
 
     MaterialBibliografico(string nombre, string isbn, string autor, bool estado);
     virtual void mostrarInformacion() const;
+    virtual string type() const;
 
     // getters y setters
     string get_nombre();

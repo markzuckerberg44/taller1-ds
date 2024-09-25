@@ -12,7 +12,7 @@ class Libro : public MaterialBibliografico {
 private:
     string fechaPublicacion;
     string resumen;
-    string tipo;
+
 
 public:
 
@@ -21,7 +21,7 @@ public:
     Libro(string nombre, string isbn, string autor, bool estado, string fechaPublicacion, string resumen);
 
     // mostrar informacion
-
+    string type() const override;
     void mostrarInformacion() const override;
 
     // getters y setters
@@ -29,7 +29,7 @@ public:
     void set_fecha_publicacion(string fecha_publicacion);
     string get_resumen();
     void set_resumen(string resumen);
-    string get_tipo();
+
 
     ~Libro();
 

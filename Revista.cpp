@@ -8,7 +8,12 @@
 Revista::Revista(string nombre, string isbn, string autor, bool estado, int numEdicion, int mesPublicacion) : MaterialBibliografico(nombre,isbn,autor,estado) {
     this -> numEdicion = numEdicion;
     this -> mesPublicacion = mesPublicacion;
-    this -> tipo = "revista";
+
+}
+
+string Revista::type() const {
+    MaterialBibliografico::type();
+    return "revista";
 }
 
 void Revista::mostrarInformacion() const {
@@ -33,9 +38,6 @@ void Revista::set_mesPublicacion(int mes_publicacion) {
     this -> mesPublicacion = mes_publicacion;
 }
 
-string Revista::get_tipo() {
-    return tipo;
-}
 
 Revista::~Revista() {
     cout << "Destructor de revista ha sido llamado" << endl;
