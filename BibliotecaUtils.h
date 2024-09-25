@@ -27,7 +27,7 @@ public:
     void buscarObj();
     void gestionMateriales();
     void gestionUsuarios();
-    void guardarEstadoEnArchivoBiblioteca();
+    void guardarInformacionBiblioteca();
     void cargarArchivoBiblioteca();
 
 

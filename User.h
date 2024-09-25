@@ -29,6 +29,7 @@ public:
     void set_nombre(const string &nombre);
     int &get_id();
     void set_id(int id);
+    MaterialBibliografico** get_materialePrestados();
 
     ~User();
 };

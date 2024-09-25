@@ -97,7 +97,10 @@ void User::set_id(int id) {
     this -> id = id;
 }
 
+MaterialBibliografico** User::get_materialePrestados() {
+    return materialesPrestados;
+}
+
 User::~User() {
-    //cout<<"Usuario destruido"<<endl;
 }
 

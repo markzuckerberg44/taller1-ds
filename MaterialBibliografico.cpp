@@ -15,10 +15,6 @@ MaterialBibliografico::MaterialBibliografico(string nombre, string isbn, string 
     this -> estado = estado;
 }
 
-string MaterialBibliografico::type() const {
-
-}
-
 
 void MaterialBibliografico::mostrarInformacion() const {
     cout << "Nombre: " << nombre << endl;
