@@ -12,6 +12,7 @@
 // ver si se repite o no un isbn
 
 bool checkIsbn(string isbn, MaterialBibliografico* biblioteca[]) {
+
     for (int i = 0 ; i < 100 ; i++) {
         if (biblioteca[i] != nullptr && biblioteca[i]->get_isbn() == isbn) {
             // retorna true si es que esta ocupado
@@ -165,7 +166,7 @@ void BibliotecaUtils::agregarMaterial() {
             cin >> numEdicion;
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpiar buffer
             cout << "Mes de publicacion: ";
-            cin >> mesPublicacion;
+            mesPublicacion = validarNumeroBiblioteca();
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpiar buffer
 
             for (int j = 0 ; j < 100 ; j++) {
@@ -245,14 +246,14 @@ void BibliotecaUtils::gestionUsuarios() {
 
         cout<<"\nID: ";
         id=validarNumeroBiblioteca();
-        if(users.size()==0) {
+        if(users.empty()) {
             cout<<"Usuario agregado"<<endl;
-            users.push_back(User(nombre,id));
+            users.emplace_back(nombre,id);
         } else {
             n=busquedaPorId(id,users);
             if(n==-1) {
                 cout<<"Usuario agregado"<<endl;
-                users.push_back(User(nombre,id));
+                users.emplace_back(nombre,id);
             }
         }
         break;
@@ -301,7 +302,7 @@ void BibliotecaUtils::gestionMateriales() {
     int n;
     MaterialBibliografico* material;
 
-    if(users.size()==0) {
+    if(users.empty()) {
         cout<<"No hay usuarios por el momento, por lo que no se pueden hacer los cambios"<<endl; // aqui es la wea
         return;
     }
@@ -368,28 +369,26 @@ void BibliotecaUtils::gestionMateriales() {
 #include <fstream>  // Para manejar archivos
 
 
-void BibliotecaUtils::guardarEstadoEnArchivoBiblioteca() {
-    ofstream archivo("EstadoBiblioteca.txt");
-
-    if (!archivo) {
-        cerr << "No se pudo abrir el archivo para escribir." << endl;
-        return;
+void BibliotecaUtils::guardarInformacionBiblioteca() {
+    ofstream archivo("EstadoBiblioteca.txt",ios::out);
+    if(!archivo) {
+        cerr<<"No se puede encontrar el archivo en EstadoBiblioteca.txt"<<endl;
     }
 
+    for(MaterialBibliografico* material : biblioteca) {
+        if (material != nullptr) {
+            archivo << material->type()<<",";
+            archivo << material->get_nombre() << ",";
+            archivo << material->get_isbn() << ",";
+            archivo << material->get_autor() << ",";
+            archivo << (material->get_estado() ? "Disponible" : "No disponible") << ",";
 
-    for(auto & i : biblioteca) {
-        if (i != nullptr) {
-            archivo << i->get_nombre() << ",";
-            archivo << i->get_isbn() << ",";
-            archivo << i->get_autor() << ",";
-            archivo << (i->get_estado() ? "Disponible" : "No disponible") << ",";
-
-            if(dynamic_cast<Libro*>(i)){
-                Libro* libro=dynamic_cast<Libro*>(i);
+            if(dynamic_cast<Libro*>(material)){
+                Libro* libro=dynamic_cast<Libro*>(material);
                 archivo << libro->get_fechapublicacion() << ",";
                 archivo << libro->get_resumen() << "\n";
             }else{
-                Revista* revista=dynamic_cast<Revista*>(i);
+                Revista* revista=dynamic_cast<Revista*>(material);
                 archivo<<revista->get_numEdicion()<<",";
                 archivo<<revista->get_mesPublicacion()<<"\n";
             }
@@ -398,6 +397,30 @@ void BibliotecaUtils::guardarEstadoEnArchivoBiblioteca() {
     }
     archivo.flush();
     archivo.close();
-    cout << "Estado de la biblioteca guardado en EstadoBiblioteca.txt" << endl;
+
+    ofstream archivo2("Usuarios.txt",ios::out);
+    if(!archivo2) {
+        cerr<<"No se puede encontrar el archivo en Usuarios.txt"<<endl;
+    }
+    for(User usuario : users) {
+        archivo2<<usuario.get_nombre()<<",";
+        archivo2<<usuario.get_id()<<",";
+        MaterialBibliografico** array = usuario.get_materialePrestados();
+        for(int i=0;i<5;i++) {
+            if(array[i] != nullptr) {
+                archivo2<<array[i]->get_nombre()<<";";
+                archivo2<<array[i]->get_autor()<<";";
+                archivo2<<array[i]->get_isbn();
+                if(i<4&&array[i+1]!=nullptr) {
+                    archivo2<<"/";
+                }
+            }
+            if(i==4) {
+                archivo2<<"\n";
+            }
+        }
+    }
+
+    cout << "Estado de la biblioteca guardado en EstadoBiblioteca.txt y Usuarios.txt" << endl;
 }
 
