@@ -27,6 +27,9 @@ public:
     void buscarObj();
     void gestionMateriales();
     void gestionUsuarios();
+    void guardarEstadoEnArchivo();
+
+
 
 };
 

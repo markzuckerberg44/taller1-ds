@@ -1,16 +1,15 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.16)
 project(taller1ds)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(taller1ds main.cpp
+# Agrega los archivos fuente
+add_executable(taller1ds
+        main.cpp
         MaterialBibliografico.cpp
-        MaterialBibliografico.h
         User.cpp
-        User.h
         Libro.cpp
-        Libro.h
         Revista.cpp
-        Revista.h
         BibliotecaUtils.cpp
-        BibliotecaUtils.h)
+)
+

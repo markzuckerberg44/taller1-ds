@@ -1,3 +1,0 @@
-C:/Users/angel/CLionProjects/taller1-ds/cmake-build-debug/CMakeFiles/taller1ds.dir
-C:/Users/angel/CLionProjects/taller1-ds/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/angel/CLionProjects/taller1-ds/cmake-build-debug/CMakeFiles/rebuild_cache.dir

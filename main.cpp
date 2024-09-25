@@ -28,7 +28,6 @@ void menu() {
 
         option = validarNumero();
 
-
         switch (option) {
             case 1:
                 // agregar material
@@ -51,6 +50,7 @@ void menu() {
                 biblioteca_utils->gestionUsuarios();
                 break;
             case 0:
+                biblioteca_utils->guardarEstadoEnArchivo();
                 cout << "Saliendo del programa..." << endl;
                 break;
             default:
@@ -63,7 +63,7 @@ void menu() {
 
 }
 
-int main() {
+int main () {
     menu();
     return 0;
 }

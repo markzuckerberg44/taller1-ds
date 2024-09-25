@@ -8,6 +8,7 @@
 
 class Revista : public MaterialBibliografico {
 private:
+    string tipo;
     int numEdicion;
     int mesPublicacion;
 
@@ -23,6 +24,7 @@ public:
     void set_numEdicion(int num_edicion);
     int get_mesPublicacion();
     void set_mesPublicacion(int mes_publicacion);
+    string get_tipo();
 
     ~Revista();
 };

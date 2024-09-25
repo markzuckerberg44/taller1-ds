@@ -98,6 +98,6 @@ void User::set_id(int id) {
 }
 
 User::~User() {
-    cout<<"Usuario destruido"<<endl;
+    //cout<<"Usuario destruido"<<endl;
 }
 

@@ -8,6 +8,18 @@
 #include <string>
 #include <limits>
 
+// ver si se repite o no un isbn
+
+bool checkIsbn(string isbn, MaterialBibliografico* biblioteca[]) {
+    for (int i = 0 ; i < 100 ; i++) {
+        if (biblioteca[i] != nullptr && biblioteca[i]->get_isbn() == isbn) {
+            // retorna true si es que esta ocupado
+            return true;
+        }
+    }
+    return false;
+}
+
 //retorna puntero de libro o revista si lo encuentra por el nombre
 MaterialBibliografico* buscarPorNombre(string nombre,MaterialBibliografico* biblioteca[]){
     int c=0;
@@ -20,7 +32,7 @@ MaterialBibliografico* buscarPorNombre(string nombre,MaterialBibliografico* bibl
         }
     }
     if(c>0) {
-        cout<<"Libro inexistente"<<endl;
+        cout<<"Material inexistente"<<endl;
     }else {
         cout<<"No hay materiales por el momento"<<endl;
     }
@@ -89,19 +101,30 @@ int opcionDeBusqueda() {
 
 void BibliotecaUtils::agregarMaterial() {
     string name, isbn, author, published, resumen;
-    int numEdicion, mesPublicacion;
+    int numEdicion, mesPublicacion, cont;
 
-
+    cont = 0;
     int tipo=0;
-    cout<<"Escoga el tipo de material a ingresar: "<<endl;
-    tipo = opcionDeBusqueda();
+    cout<<"Escoga el tipo de material a ingresar:\n(1) Libro\n(2) Revista"<<endl;
+    cin >> tipo;
     cin.ignore(1000,'\n');
     switch (tipo) {
         case 1:
             cout << "Nombre: ";
             getline(cin, name);
             cout << "ISBN: ";
-            getline(cin, isbn);
+
+            do {
+                if (cont > 0) {
+                    cout << "ISBN no disponible, por favor ingrese otro" << endl;
+                    cout << ">";
+                }
+
+                getline(cin, isbn);
+                cont++;
+            } while (checkIsbn(isbn,biblioteca));
+
+
             cout << "Autor: ";
             getline(cin, author);
             cout << "Fecha de publicacion: ";
@@ -121,8 +144,20 @@ void BibliotecaUtils::agregarMaterial() {
         case 2:
             cout << "Nombre: ";
             getline(cin, name);
+
             cout << "ISBN: ";
-            getline(cin, isbn);
+            // verificamos si existe el isbn
+            do {
+                if (cont > 0) {
+                    cout << "ISBN no disponible, por favor ingrese otro" << endl;
+                    cout << ">";
+                }
+
+                getline(cin, isbn);
+                cont++;
+            } while (checkIsbn(isbn,biblioteca));
+
+
             cout << "Autor: ";
             getline(cin, author);
             cout << "Numero de edicion: ";
@@ -171,14 +206,18 @@ void BibliotecaUtils::buscarObj() {
             cout << "Ingrese titulo:";
             getline(cin, titulo);
             obj = buscarPorNombre(titulo, biblioteca);
-            obj->mostrarInformacion();
+            if (obj != nullptr) {
+                obj->mostrarInformacion();
+            }
             break;
         case 2:
             //autor
             cout << "Ingrese autor:";
             getline(cin, autor);
             obj = buscarPorAutor(autor, biblioteca);
-            obj->mostrarInformacion();
+            if (obj != nullptr) {
+                obj->mostrarInformacion();
+            }
             break;
         default:
         break;
@@ -208,7 +247,7 @@ void BibliotecaUtils::gestionUsuarios() {
         if(users.size()==0) {
             cout<<"Usuario agregado"<<endl;
             users.push_back(User(nombre,id));
-        }else {
+        } else {
             n=busquedaPorId(id,users);
             if(n==-1) {
                 cout<<"Usuario agregado"<<endl;
@@ -233,6 +272,7 @@ void BibliotecaUtils::gestionUsuarios() {
         case 3:
             if(users.size()==0) {
                 cout<<"No hay usuarios por el momento"<<endl;
+                return;
             }
             cout<<"Ingrese la ID del usuario: "<<endl;
             id=validarNumeroBiblioteca();
@@ -240,8 +280,8 @@ void BibliotecaUtils::gestionUsuarios() {
             n=busquedaPorId(id,users);
 
             if(n>=0) {
-                cout<<"Nombre: "+users[n].get_nombre()<<endl;
-                cout<<"ID: "+users[n].get_id()<<endl;
+                cout<<"Nombre: "<<users[n].get_nombre()<<endl;
+                cout<<"ID: "<<users[n].get_id()<<endl;
                 cout<<"Materiales prestados: "<<endl;
                 users[n].mostrarMaterialesPrestados();
             }
@@ -259,10 +299,12 @@ void BibliotecaUtils::gestionMateriales() {
     int indice=-1;
     int n;
     MaterialBibliografico* material;
+
     if(users.size()==0) {
-        cout<<"No hay usuarios por el momento, por lo que no se pueden hacer los cambios"<<endl;
+        cout<<"No hay usuarios por el momento, por lo que no se pueden hacer los cambios"<<endl; // aqui es la wea
         return;
     }
+
     cout<<"(1) Prestamo de material"<<endl;
     cout<<"(2) Devolucion de materiales prestados"<<endl;
     opcion = validarNumeroBiblioteca();
@@ -320,5 +362,32 @@ void BibliotecaUtils::gestionMateriales() {
         default:
             break;
     }
+}
+
+#include <fstream>  // Para manejar archivos
+
+
+void BibliotecaUtils::guardarEstadoEnArchivo() {
+
+    ofstream archivo("EstadoBiblioteca.txt");
+
+    if (!archivo) {
+        cerr << "No se pudo abrir el archivo para escribir." << endl;
+        return;
+    }
+
+
+    for (int i = 0; i < 100; i++) {
+        if (biblioteca[i] != nullptr) {
+            archivo << biblioteca[i]->
+            archivo << biblioteca[i]->get_nombre() << ",";
+            archivo << biblioteca[i]->get_isbn() << ",";
+            archivo << biblioteca[i]->get_autor() << ",";
+            archivo << (biblioteca[i]->get_estado() ? "Disponible" : "No disponible") << "\n";
+        }
+    }
+
+    archivo.close();
+    cout << "Estado de la biblioteca guardado en EstadoBiblioteca.txt" << endl;
 }
 

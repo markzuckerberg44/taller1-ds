@@ -12,6 +12,7 @@ class Libro : public MaterialBibliografico {
 private:
     string fechaPublicacion;
     string resumen;
+    string tipo;
 
 public:
 
@@ -28,6 +29,9 @@ public:
     void set_fecha_publicacion(string fecha_publicacion);
     string get_resumen();
     void set_resumen(string resumen);
+    string get_tipo();
+
+    ~Libro();
 
 
 
