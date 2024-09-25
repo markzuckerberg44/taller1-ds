@@ -12,7 +12,6 @@ Revista::Revista(string nombre, string isbn, string autor, bool estado, int numE
 }
 
 string Revista::type() const {
-    MaterialBibliografico::type();
     return "revista";
 }
 

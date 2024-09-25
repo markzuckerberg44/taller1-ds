@@ -12,7 +12,6 @@ Libro::Libro(string nombre, string isbn, string autor, bool estado, string fecha
 }
 
 string Libro::type() const {
-    MaterialBibliografico::type();
     return "libro";
 }
 

@@ -50,7 +50,7 @@ void menu() {
                 biblioteca_utils->gestionUsuarios();
                 break;
             case 0:
-                biblioteca_utils->guardarEstadoEnArchivo();
+                biblioteca_utils->guardarEstadoEnArchivoBiblioteca();
                 cout << "Saliendo del programa..." << endl;
                 break;
             default:
@@ -59,7 +59,7 @@ void menu() {
         }
 
     }
-
+    delete biblioteca_utils;
 
 }
 

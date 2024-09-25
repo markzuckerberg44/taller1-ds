@@ -4,6 +4,7 @@
 //
 
 #include "BibliotecaUtils.h"
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <limits>
@@ -106,7 +107,7 @@ void BibliotecaUtils::agregarMaterial() {
     cont = 0;
     int tipo=0;
     cout<<"Escoga el tipo de material a ingresar:\n(1) Libro\n(2) Revista"<<endl;
-    cin >> tipo;
+    tipo = validarNumeroBiblioteca();
     cin.ignore(1000,'\n');
     switch (tipo) {
         case 1:
@@ -367,8 +368,7 @@ void BibliotecaUtils::gestionMateriales() {
 #include <fstream>  // Para manejar archivos
 
 
-void BibliotecaUtils::guardarEstadoEnArchivo() {
-
+void BibliotecaUtils::guardarEstadoEnArchivoBiblioteca() {
     ofstream archivo("EstadoBiblioteca.txt");
 
     if (!archivo) {
@@ -377,22 +377,26 @@ void BibliotecaUtils::guardarEstadoEnArchivo() {
     }
 
 
-    for (int i = 0; i < 100; i++) {
-        if (biblioteca[i] != nullptr) {
-            archivo << biblioteca[i]->type();
-            archivo << biblioteca[i]->get_nombre() << ",";
-            archivo << biblioteca[i]->get_isbn() << ",";
-            archivo << biblioteca[i]->get_autor() << ",";
-            archivo << (biblioteca[i]->get_estado() ? "Disponible" : "No disponible") << "\n";
-            if (biblioteca[i]->type() == "libro") {
-                // agregamos los datos extras de libro
+    for(auto & i : biblioteca) {
+        if (i != nullptr) {
+            archivo << i->get_nombre() << ",";
+            archivo << i->get_isbn() << ",";
+            archivo << i->get_autor() << ",";
+            archivo << (i->get_estado() ? "Disponible" : "No disponible") << ",";
 
-            } else {
-                // agregamos los datos extras de revista
+            if(dynamic_cast<Libro*>(i)){
+                Libro* libro=dynamic_cast<Libro*>(i);
+                archivo << libro->get_fechapublicacion() << ",";
+                archivo << libro->get_resumen() << "\n";
+            }else{
+                Revista* revista=dynamic_cast<Revista*>(i);
+                archivo<<revista->get_numEdicion()<<",";
+                archivo<<revista->get_mesPublicacion()<<"\n";
             }
+
         }
     }
-
+    archivo.flush();
     archivo.close();
     cout << "Estado de la biblioteca guardado en EstadoBiblioteca.txt" << endl;
 }
