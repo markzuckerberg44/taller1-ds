@@ -377,6 +377,7 @@ void BibliotecaUtils::guardarInformacionBiblioteca() {
 
     for(MaterialBibliografico* material : biblioteca) {
         if (material != nullptr) {
+            archivo << material->type()<<",";
             archivo << material->get_nombre() << ",";
             archivo << material->get_isbn() << ",";
             archivo << material->get_autor() << ",";
@@ -396,17 +397,21 @@ void BibliotecaUtils::guardarInformacionBiblioteca() {
     }
     archivo.flush();
     archivo.close();
-
+    int cont;
     ofstream archivo2("Usuarios.txt",ios::out);
     if(!archivo2) {
         cerr<<"No se puede encontrar el archivo en Usuarios.txt"<<endl;
     }
     for(User usuario : users) {
         archivo2<<usuario.get_nombre()<<",";
-        archivo2<<usuario.get_id()<<",";
+        archivo2<<usuario.get_id();
         MaterialBibliografico** array = usuario.get_materialePrestados();
+        cont=0;
         for(int i=0;i<5;i++) {
             if(array[i] != nullptr) {
+                if(cont==0) {
+                    archivo2<<",";
+                }
                 archivo2<<array[i]->get_nombre()<<";";
                 archivo2<<array[i]->get_autor()<<";";
                 archivo2<<array[i]->get_isbn();
@@ -419,7 +424,8 @@ void BibliotecaUtils::guardarInformacionBiblioteca() {
             }
         }
     }
-
+    archivo2.flush();
+    archivo2.close();
     cout << "Estado de la biblioteca guardado en EstadoBiblioteca.txt y Usuarios.txt" << endl;
 }
 
