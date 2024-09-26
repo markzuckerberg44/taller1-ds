@@ -29,16 +29,24 @@ MaterialBibliografico* buscarPorNombre(string nombre,MaterialBibliografico* bibl
         if(biblioteca[i] != nullptr) {
             c++;
             if(biblioteca[i]->get_nombre()==nombre) {
-                return biblioteca[i];
+                if(biblioteca[i]->get_estado()) {
+                    return biblioteca[i];
+                }
+                c=-1;
             }
         }
     }
-    if(c>0) {
-        cout<<"Material inexistente"<<endl;
-    }else {
-        cout<<"No hay materiales por el momento"<<endl;
+    switch (c) {
+        case -1:
+            cout<<"No hay unidades disponibles"<<endl;
+        break;
+        case 0:
+            cout<<"No hay materiales por el momento"<<endl;
+        break;
+        default:
+            cout<<"Material inexistente"<<endl;
+        break;
     }
-
     return nullptr;
 }
 //retorna puntero de libro o revista si lo encuntra por autor
@@ -48,16 +56,22 @@ MaterialBibliografico* buscarPorAutor(string autor,MaterialBibliografico* biblio
         if(biblioteca[i] != nullptr) {
             c++;
             if(biblioteca[i]->get_autor()==autor) {
-                return biblioteca[i];
+                if(biblioteca[i]->get_estado()){return biblioteca[i];}
+                c=-1;
             }
         }
     }
-    if(c>0) {
-        cout<<"Autor inexistente"<<endl;
-    }else {
-        cout<<"No hay materiales por el momento"<<endl;
+    switch (c) {
+        case -1:
+            cout<<"No hay unidades del autor disponibles"<<endl;
+            break;
+        case 0:
+            cout<<"No hay materiales por el momento"<<endl;
+            break;
+        default:
+            cout<<"Autor inexistente"<<endl;
+            break;
     }
-
     return nullptr;
 }
 
@@ -366,13 +380,11 @@ void BibliotecaUtils::gestionMateriales() {
     }
 }
 
-#include <fstream>  // Para manejar archivos
-
-
 void BibliotecaUtils::guardarInformacionBiblioteca() {
     ofstream archivo("EstadoBiblioteca.txt",ios::out);
     if(!archivo) {
         cerr<<"No se puede encontrar el archivo en EstadoBiblioteca.txt"<<endl;
+        return;
     }
 
     for(MaterialBibliografico* material : biblioteca) {
@@ -383,8 +395,7 @@ void BibliotecaUtils::guardarInformacionBiblioteca() {
             archivo << material->get_autor() << ",";
             archivo << (material->get_estado() ? "Disponible" : "No disponible") << ",";
 
-            if(dynamic_cast<Libro*>(material)){
-                Libro* libro=dynamic_cast<Libro*>(material);
+            if(Libro* libro=dynamic_cast<Libro*>(material)){
                 archivo << libro->get_fechapublicacion() << ",";
                 archivo << libro->get_resumen() << "\n";
             }else{
@@ -401,17 +412,16 @@ void BibliotecaUtils::guardarInformacionBiblioteca() {
     ofstream archivo2("Usuarios.txt",ios::out);
     if(!archivo2) {
         cerr<<"No se puede encontrar el archivo en Usuarios.txt"<<endl;
+        return;
     }
     for(User usuario : users) {
         archivo2<<usuario.get_nombre()<<",";
-        archivo2<<usuario.get_id();
+        archivo2<<usuario.get_id()<<",";
         MaterialBibliografico** array = usuario.get_materialePrestados();
-        cont=0;
+
         for(int i=0;i<5;i++) {
             if(array[i] != nullptr) {
-                if(cont==0) {
-                    archivo2<<",";
-                }
+
                 archivo2<<array[i]->get_nombre()<<";";
                 archivo2<<array[i]->get_autor()<<";";
                 archivo2<<array[i]->get_isbn();
