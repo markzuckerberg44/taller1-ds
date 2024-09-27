@@ -13,7 +13,7 @@ class User {
 private:
     string nombre;
     int id;
-    MaterialBibliografico* materialesPrestados[5];
+    MaterialBibliografico* materialesPrestados[5]{};
 public:
     //contructor de la clase
     User(string nombre, int id);

@@ -5,8 +5,6 @@
 #include <string>
 #include "MaterialBibliografico.h"
 #include <iostream>
-using namespace std;
-
 
 MaterialBibliografico::MaterialBibliografico(string nombre, string isbn, string autor, bool estado) {
     this -> nombre = nombre;

@@ -8,19 +8,20 @@
 User::User(string nombre, int id) {
     this->nombre = nombre;
     this->id = id;
-    for(int i = 0; i < 5; i++) {
-        materialesPrestados[i] = nullptr;
-    }
 }
 
 // implementacion metodos
 
 void User::prestarMaterial(MaterialBibliografico* material) {
 
-    for(int i=0;i<5;i++){
-        if(materialesPrestados[i]==nullptr){
+    if(!material->get_estado()) {
+        cout << "Material no disponible" << endl;
+        return;
+    }
+    for(MaterialBibliografico* materiales : materialesPrestados) {
+        if(materiales==nullptr) {
             material->set_estado(false);
-            materialesPrestados[i]=material;
+            materiales = material;
             return;
         }
     }

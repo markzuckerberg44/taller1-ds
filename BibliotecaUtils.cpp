@@ -9,16 +9,17 @@
 #include <string>
 #include <limits>
 
-// ver si se repite o no un isbn
 
+// ver si se repite o no un isbn
 bool checkIsbn(string isbn, MaterialBibliografico* biblioteca[]) {
 
-    for (int i = 0 ; i < 100 ; i++) {
-        if (biblioteca[i] != nullptr && biblioteca[i]->get_isbn() == isbn) {
-            // retorna true si es que esta ocupado
+    for(int i = 0; i < 100; i++) {
+        if(biblioteca[i]!=nullptr&&biblioteca[i]->get_isbn()==isbn) {
+            //retorna true si es que esta ocupado
             return true;
         }
     }
+
     return false;
 }
 
@@ -80,9 +81,11 @@ int busquedaPorId(int id,vector<User>& users) {
 
     for(int i=0;i<users.size();i++) {
         if(users[i].get_id()==id) {
+            //retorna el indice en el que esta
             return i;
         }
     }
+    //en caso de no haber un usuario retorna -1 para dar a entender que no hay
     return -1;
 }
 
@@ -193,6 +196,8 @@ void BibliotecaUtils::agregarMaterial() {
                 }
             break;
         default:
+            cout<<"Opción invalida haga el favor de ingresar 1 o 2"<<endl;
+            tipo = validarNumeroBiblioteca();
             break;
     }
 
@@ -408,7 +413,6 @@ void BibliotecaUtils::guardarInformacionBiblioteca() {
     }
     archivo.flush();
     archivo.close();
-    int cont;
     ofstream archivo2("Usuarios.txt",ios::out);
     if(!archivo2) {
         cerr<<"No se puede encontrar el archivo en Usuarios.txt"<<endl;
