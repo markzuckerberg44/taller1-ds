@@ -18,10 +18,10 @@ void User::prestarMaterial(MaterialBibliografico* material) {
         cout << "Material no disponible" << endl;
         return;
     }
-    for(MaterialBibliografico* materiales : materialesPrestados) {
-        if(materiales==nullptr) {
+    for(int i = 0; i < 5 ;i++) {
+        if(materialesPrestados[i]==nullptr) {
             material->set_estado(false);
-            materiales = material;
+            materialesPrestados[i] = material;
             return;
         }
     }
