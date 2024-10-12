@@ -19,6 +19,7 @@ int validarNumero() {
 
 void menu() {
     BibliotecaUtils* biblioteca_utils = new BibliotecaUtils();
+    biblioteca_utils -> cargarArchivoBiblioteca();
     int option=6;
     while (option!=0) {
 

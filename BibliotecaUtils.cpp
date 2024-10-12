@@ -151,6 +151,7 @@ void BibliotecaUtils::agregarMaterial() {
             cout << "Resumen: ";
             getline(cin, resumen);
 
+            // agregamos el material a la biblioteca
             for (int i = 0 ; i < 100 ; i++) {
                 if (biblioteca[i] == nullptr) {
                     Libro* lib = new Libro(name,isbn,author,true,published,resumen);
@@ -443,3 +444,121 @@ void BibliotecaUtils::guardarInformacionBiblioteca() {
     cout << "Estado de la biblioteca guardado en EstadoBiblioteca.txt y Usuarios.txt" << endl;
 }
 
+/* -----------------------------------------------------------------
+ * METODO PARA SPLITEAR UN STRING Y RETORNAR SUS SECCIONES EN UN VECTOR
+ * -----------------------------------------------------------------
+ */
+
+vector<string> BibliotecaUtils::split(string str, char delim) {
+
+    vector<string> result;
+    string temp = ""; // variable temporal para crear string nuevos
+
+    for (char i : str) {
+        if(i==delim) {
+            result.push_back(temp);
+            temp = ""; // se resetea cada vez que el char == al delimitador que recibe el metodo
+        } else {
+            temp+=i; // si es que no es lo mismo que el delimitador entonces agregamos el char a la variable temporal
+        }
+    }
+
+    if (!temp.empty()) {
+        result.push_back(temp); // aca lo hacemos en caso de que salga del loop y la variable temporal siga conteniendo material
+    }
+
+    return result;
+}
+
+/* -----------------------------------------------------------------
+ * METODO PARA CARGAR OBJETOS LEYENDO UN ARCHIVO .TXT
+ * -----------------------------------------------------------------
+ */
+
+void BibliotecaUtils::cargarArchivoBiblioteca() {
+
+
+    string myText;
+    ifstream MyReadFile("EstadoBiblioteca.txt");
+
+    // verificamos si el archivo se abrio correctamente
+    if (!MyReadFile.is_open()) {
+        cout << "Error al abrir el archivo." << endl;
+        return;
+    }
+
+    while (getline(MyReadFile,myText)) {
+        vector<string> partes = split(myText,',');
+
+        if (partes.size() < 7) {
+            cout << "Línea mal formateada o con menos columnas de las esperadas." << endl;
+            continue;  // Saltar a la siguiente línea si no hay suficientes datos
+        }
+
+        string tipo = partes.at(0);
+        bool dispo;
+
+        // tranformamos el valor de un string a un booleano para poder cargar la biblioteca
+        if (partes.at(4) == "Disponible") {
+            dispo = true;
+        } else {
+            dispo = false;
+        }
+
+        if (tipo=="libro") {
+
+            Libro* lib = new Libro(partes.at(1),partes.at(2), partes.at(3), dispo, partes.at(5), partes.at(6));
+            for (int i = 0 ; i < 100 ; i++) {
+                if (biblioteca[i] == nullptr) {
+
+                    biblioteca[i] = lib;
+                    cout << "Material agregado en la posicion:" << i << endl;
+                    break;
+                }
+            }
+        } else if (tipo=="revista") {
+
+            Revista* rev = new Revista(partes.at(1),partes.at(2),partes.at(3),dispo,stoi(partes.at(5)),stoi(partes.at(6)));
+            for (int j = 0 ; j < 100 ; j++) {
+                if (biblioteca[j] == nullptr) {
+                    biblioteca[j] = rev;
+                    cout << "Material agregado en la posicion:" << j << endl;
+                    break;
+                }
+            }
+
+
+        } else {
+            cout << "Tipo de material no identificado" << endl;
+        }
+
+
+    }
+
+    // cerramos el archivo
+    MyReadFile.close();
+
+}
+
+/* -----------------------------------------------------------------
+ * METODO QUE CARGA USUARIOS A PARTIR DE UN .TXT
+ * -----------------------------------------------------------------
+ */
+void BibliotecaUtils::cargarArchivoUsuarios() {
+
+    string myText;
+    ifstream MyReadFile("Usuarios.txt");
+
+    // verificamos si el archivo se abrio correctamente
+    if (!MyReadFile.is_open()) {
+        cout << "Error al abrir el archivo." << endl;
+        return;
+    }
+
+    while (getline(MyReadFile,myText)) {
+
+    }
+
+    // cerramos el archivo
+    MyReadFile.close();
+}

@@ -29,6 +29,8 @@ public:
     void gestionUsuarios();
     void guardarInformacionBiblioteca();
     void cargarArchivoBiblioteca();
+    vector<string> split(string str, char delim);
+    void cargarArchivoUsuarios();
 
 
 };
