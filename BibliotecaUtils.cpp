@@ -558,14 +558,14 @@ void BibliotecaUtils::cargarArchivoUsuarios() {
         int id = stoi (partes.at(1));
         users.emplace_back(nombre,id);
         int cont=0;
-        int tamaño = stoi(partes.at(2));//esto es la cantidad de materiles prestados
+        int largo = stoi(partes.at(2));//esto es la cantidad de materiles prestados
 
         if(partes.size()==3){continue;}//esto es por si no hay materiales prestados
 
         vector<string> materiales = split(partes.at(3),';');
 
         for(int j=0;j<5;j++) {
-            if(j<tamaño) {
+            if(j<largo) {
                 material[j] = materiales[j];
             }else {
                 material[j]=" ";
