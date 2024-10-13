@@ -20,14 +20,14 @@ public:
 
     // metodos
     void prestarMaterial(MaterialBibliografico* material);
-    void devolverMaterial(string isbn);
+    void devolverMaterial();
     void mostrarMaterialesPrestados();
     void devolverTodosLosMateriales();
 
     // getters  y setters
     string &get_nombre();
     void set_nombre(const string &nombre);
-    int &get_id();
+    int get_id() ;
     void set_id(int id);
     MaterialBibliografico** get_materialePrestados();
 

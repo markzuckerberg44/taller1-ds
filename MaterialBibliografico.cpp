@@ -11,6 +11,7 @@ MaterialBibliografico::MaterialBibliografico(string nombre, string isbn, string 
     this -> isbn = isbn;
     this -> autor = autor;
     this -> estado = estado;
+    idUsuario = "";
 }
 
 
@@ -52,6 +53,10 @@ bool MaterialBibliografico::get_estado() {
 void MaterialBibliografico::set_estado(bool estado) {
     this -> estado = estado;
 }
+
+string MaterialBibliografico::get_id(){return idUsuario;}
+
+void MaterialBibliografico::set_id(string idUsuario) {this->idUsuario = idUsuario;}
 
 MaterialBibliografico::~MaterialBibliografico() {
     cout << "Destructor de material llamado" << endl;

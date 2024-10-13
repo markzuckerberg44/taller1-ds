@@ -12,62 +12,86 @@ User::User(string nombre, int id) {
 
 // implementacion metodos
 
-void User::prestarMaterial(MaterialBibliografico* material) {
-
-    if(!material->get_estado()) {
+void User::prestarMaterial(MaterialBibliografico *material) {
+    if (!material->get_estado()) {
         cout << "Material no disponible" << endl;
         return;
     }
-    for(int i = 0; i < 5 ;i++) {
-        if(materialesPrestados[i]==nullptr) {
+    for (int i = 0; i < 5; i++) {
+        if (materialesPrestados[i] == nullptr) {
             material->set_estado(false);
+            material->set_id(to_string(id));
             materialesPrestados[i] = material;
             return;
         }
     }
-    cout<<"El usuario no tiene espacios disponibles para aceptar material"<<endl;
+    cout << "El usuario no tiene espacios disponibles para aceptar material" << endl;
 }
 
-void User::devolverMaterial(string isbn) {
-    int c=0;//contador para comprobar que si existen materiles a disposicion
-    for(int i=0;i<5;i++) {
-        if(materialesPrestados[i]!=nullptr) {
-            if(materialesPrestados[i]->get_isbn()==isbn) {
-                materialesPrestados[i]->set_estado(true);
-                materialesPrestados[i]=nullptr;
-                cout<<"Material devuelto"<<endl;
-                break;
+void User::devolverMaterial() {
+    int c = 0;
+
+    for (int i = 0; i < 5; i++) {
+        if (materialesPrestados[i] != nullptr) {
+            if (c == 0) {
+                cout << "A continuacion se mostraran los materiales disponibles del usuario" << endl;
+                c=1;
             }
-            c++;
+            cout << i << ") nombre: " << materialesPrestados[i]->get_nombre() << " autor: " << materialesPrestados[i]->get_autor() <<
+                    " isbn: " << materialesPrestados[i]->get_isbn() << endl;
         }
     }
-    if(c>0) {
-        cout<<"Isbn "+isbn+" no coincide con ninguno dentro de los materiales prestados"<<endl;
+    if(c==0) {
+        cout<<"el usuario no tiene materiales disponibles"<<endl;
     }else {
-        cout<<"El usuario no tiene materiales"<<endl;
-    }
+        string isbn ="";
+        cout<<"escriba el isbn del material a devolver:\n";
+        while(c!=0){
+            if(c>1) {
+                cout <<"ISBN mal escrito \n>"<< endl;
+            }
+            c++;
+            string dato="";//se usara para eliminar los espacios vacios
+            getline(cin, isbn);
+            for(char letra :isbn) {
+                if(letra!=' ') {
+                    dato+=letra;
+                }
+            }
+            isbn = dato;
 
+            for(int i=0;i<5;i++) {
+                if(materialesPrestados[i]!=nullptr&&materialesPrestados[i]->get_isbn()==isbn) {
+                    materialesPrestados[i]->set_id("");
+                    materialesPrestados[i]->set_estado(true);
+                    materialesPrestados[i]=nullptr;
+                    c=0;
+                    break;
+                }
+            }
+        }
+    }
 }
 
 void User::devolverTodosLosMateriales() {
-    for(int i=0;i<5;i++) {
-        if(materialesPrestados[i]!=nullptr) {
+    for (int i = 0; i < 5; i++) {
+        if (materialesPrestados[i] != nullptr) {
             materialesPrestados[i]->set_estado(true);
-            materialesPrestados[i]=nullptr;
+            materialesPrestados[i]->set_id("");
+            materialesPrestados[i] = nullptr;
         }
     }
 }
 
 
 void User::mostrarMaterialesPrestados() {
-
     int cont = 0; // este contador lo usamos para ver cuantos materiales posee el usuario
 
-    for (int i = 0 ; i < 5; i++) {
-        if (materialesPrestados[i]!=nullptr) {
-            cout<<"------------------------"<<endl;
-            materialesPrestados[i] -> mostrarInformacion();
-            cout<<"------------------------"<<endl;
+    for (int i = 0; i < 5; i++) {
+        if (materialesPrestados[i] != nullptr) {
+            cout << "------------------------" << endl;
+            materialesPrestados[i]->mostrarInformacion();
+            cout << "------------------------" << endl;
             cont++;
         }
     }
@@ -79,7 +103,6 @@ void User::mostrarMaterialesPrestados() {
 }
 
 
-
 // implementacion getters & setters
 
 string &User::get_nombre() {
@@ -87,21 +110,20 @@ string &User::get_nombre() {
 }
 
 void User::set_nombre(const string &nombre) {
-    this -> nombre = nombre;
+    this->nombre = nombre;
 }
 
-int &User::get_id() {
+int User::get_id() {
     return id;
 }
 
 void User::set_id(int id) {
-    this -> id = id;
+    this->id = id;
 }
 
-MaterialBibliografico** User::get_materialePrestados() {
+MaterialBibliografico **User::get_materialePrestados() {
     return materialesPrestados;
 }
 
 User::~User() {
 }
-

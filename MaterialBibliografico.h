@@ -11,6 +11,7 @@ private:
     string nombre;
     string isbn;
     string autor;
+    string idUsuario;
     bool estado;
 public:
 
@@ -27,7 +28,8 @@ public:
     void set_autor(string autor);
     bool get_estado();
     void set_estado(bool estado);
-
+    string get_id();
+    void set_id(string idUsuario);
     // destructor
     virtual ~MaterialBibliografico();
 

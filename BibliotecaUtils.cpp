@@ -12,9 +12,15 @@
 
 // ver si se repite o no un isbn
 bool checkIsbn(string isbn, MaterialBibliografico* biblioteca[]) {
+    if(isbn == "") {
+        cout <<"isbn invalido debe contener al menos un dato"<<endl;
+        return true;
+    }
 
     for(int i = 0; i < 100; i++) {
         if(biblioteca[i]!=nullptr&&biblioteca[i]->get_isbn()==isbn) {
+            cout << "ISBN no disponible, por favor ingrese otro" << endl;
+            cout << ">";
             //retorna true si es que esta ocupado
             return true;
         }
@@ -132,15 +138,16 @@ void BibliotecaUtils::agregarMaterial() {
             cout << "Nombre: ";
             getline(cin, name);
             cout << "ISBN: ";
-
+            // verificamos si existe o es invalido el isbn
             do {
-                if (cont > 0) {
-                    cout << "ISBN no disponible, por favor ingrese otro" << endl;
-                    cout << ">";
-                }
-
+                string dato = ""; //con esto se eliminara los espacios
                 getline(cin, isbn);
-                cont++;
+                for(char i:isbn) {
+                    if(i!=' ') {
+                        dato+=i;
+                    }
+                }
+                isbn = dato;
             } while (checkIsbn(isbn,biblioteca));
 
 
@@ -166,15 +173,16 @@ void BibliotecaUtils::agregarMaterial() {
             getline(cin, name);
 
             cout << "ISBN: ";
-            // verificamos si existe el isbn
+            // verificamos si existe o es invalido el isbn
             do {
-                if (cont > 0) {
-                    cout << "ISBN no disponible, por favor ingrese otro" << endl;
-                    cout << ">";
-                }
-
+                string dato = ""; //con esto se eliminara los espacios
                 getline(cin, isbn);
-                cont++;
+                for(char i:isbn) {
+                    if(i!=' ') {
+                        dato+=i;
+                    }
+                }
+                isbn = dato;
             } while (checkIsbn(isbn,biblioteca));
 
 
@@ -364,22 +372,10 @@ void BibliotecaUtils::gestionMateriales() {
             cin.ignore(1000,'\n');
             if(indice==-1) {
                 return;
-            }
-            cout<<"En base a que deseas buscar?"<<endl;
-            n=opcionDeBusqueda();
-            cin.ignore(1000,'\n');
-            if(n==1) {
-                cout<<"Nombre del material: "<<endl;
-                getline(cin, dato);
-                material=buscarPorNombre(dato,biblioteca);
             }else {
-                cout<<"Nombre del autor: "<<endl;
-                getline(cin, dato);
-                material=buscarPorAutor(dato,biblioteca);
+                users[indice].devolverMaterial();
             }
-            if(material!=nullptr) {
-                users[indice].devolverMaterial(material->get_isbn());
-            }
+
             break;
         default:
             break;
@@ -387,12 +383,14 @@ void BibliotecaUtils::gestionMateriales() {
 }
 
 void BibliotecaUtils::guardarInformacionBiblioteca() {
+    /*ofstream limpiar("EstadoBiblioteca.txt", std::ios::trunc);
+    limpiar.close();*/
+
     ofstream archivo("EstadoBiblioteca.txt",ios::out);
     if(!archivo) {
         cerr<<"No se puede encontrar el archivo en EstadoBiblioteca.txt"<<endl;
         return;
     }
-
     for(MaterialBibliografico* material : biblioteca) {
         if (material != nullptr) {
             archivo << material->type()<<",";
@@ -403,16 +401,15 @@ void BibliotecaUtils::guardarInformacionBiblioteca() {
 
             if(Libro* libro=dynamic_cast<Libro*>(material)){
                 archivo << libro->get_fechapublicacion() << ",";
-                archivo << libro->get_resumen() << "\n";
+                archivo << libro->get_resumen() << ",";
             }else{
                 Revista* revista=dynamic_cast<Revista*>(material);
                 archivo<<revista->get_numEdicion()<<",";
-                archivo<<revista->get_mesPublicacion()<<"\n";
+                archivo<<revista->get_mesPublicacion()<<",";
             }
-
+            archivo << material->get_id() << "\n";
         }
     }
-    archivo.flush();
     archivo.close();
     ofstream archivo2("Usuarios.txt",ios::out);
     if(!archivo2) {
@@ -423,23 +420,17 @@ void BibliotecaUtils::guardarInformacionBiblioteca() {
         archivo2<<usuario.get_nombre()<<",";
         archivo2<<usuario.get_id()<<",";
         MaterialBibliografico** array = usuario.get_materialePrestados();
-
+        int cont = 0;
+        string dato = "";
         for(int i=0;i<5;i++) {
             if(array[i] != nullptr) {
-
-                archivo2<<array[i]->get_nombre()<<";";
-                archivo2<<array[i]->get_autor()<<";";
-                archivo2<<array[i]->get_isbn();
-                if(i<4&&array[i+1]!=nullptr) {
-                    archivo2<<"/";
-                }
-            }
-            if(i==4) {
-                archivo2<<"\n";
+                cont++;
+                dato += array[i]->get_isbn()+";";
             }
         }
+        archivo2<<cont<<","<<dato<<"\n";
+
     }
-    archivo2.flush();
     archivo2.close();
     cout << "Estado de la biblioteca guardado en EstadoBiblioteca.txt y Usuarios.txt" << endl;
 }
@@ -477,7 +468,6 @@ vector<string> BibliotecaUtils::split(string str, char delim) {
 
 void BibliotecaUtils::cargarArchivoBiblioteca() {
 
-
     string myText;
     ifstream MyReadFile("EstadoBiblioteca.txt");
 
@@ -505,33 +495,35 @@ void BibliotecaUtils::cargarArchivoBiblioteca() {
             dispo = false;
         }
 
+        //obtenemos el indice de la posición nullptr
+        int indice = -1;
+        for(int i = 0; i < 100; i++) {
+            if (biblioteca[i] == nullptr) {
+                indice = i;
+            }
+        }
+        if(indice == -1) {
+            cout<<"Limite excedido "<<endl;
+            break;
+        }
+
         if (tipo=="libro") {
 
             Libro* lib = new Libro(partes.at(1),partes.at(2), partes.at(3), dispo, partes.at(5), partes.at(6));
-            for (int i = 0 ; i < 100 ; i++) {
-                if (biblioteca[i] == nullptr) {
 
-                    biblioteca[i] = lib;
-                    cout << "Material agregado en la posicion:" << i << endl;
-                    break;
-                }
-            }
+            biblioteca[indice] = lib;
         } else if (tipo=="revista") {
 
             Revista* rev = new Revista(partes.at(1),partes.at(2),partes.at(3),dispo,stoi(partes.at(5)),stoi(partes.at(6)));
-            for (int j = 0 ; j < 100 ; j++) {
-                if (biblioteca[j] == nullptr) {
-                    biblioteca[j] = rev;
-                    cout << "Material agregado en la posicion:" << j << endl;
-                    break;
-                }
-            }
 
+            biblioteca[indice] = rev;
 
         } else {
             cout << "Tipo de material no identificado" << endl;
         }
-
+        if(partes.size() > 7) {
+            biblioteca[indice]->set_id(partes.at(7));
+        }
 
     }
 
@@ -548,17 +540,67 @@ void BibliotecaUtils::cargarArchivoUsuarios() {
 
     string myText;
     ifstream MyReadFile("Usuarios.txt");
-
+    string material[5];
     // verificamos si el archivo se abrio correctamente
     if (!MyReadFile.is_open()) {
         cout << "Error al abrir el archivo." << endl;
         return;
     }
-
+    int contUser = -1;
     while (getline(MyReadFile,myText)) {
+        contUser++;
+        vector<string> partes = split(myText,',');
+        if (partes.size() < 3) {
+            cout<< "Linea mal formateada o con menos datos de los esperados"<<endl;
+            continue;
+        }
+        string nombre = partes.at(0);
+        int id = stoi (partes.at(1));
+        users.emplace_back(nombre,id);
+        int cont=0;
+        int tamaño = stoi(partes.at(2));//esto es la cantidad de materiles prestados
 
+        if(partes.size()==3){continue;}//esto es por si no hay materiales prestados
+
+        vector<string> materiales = split(partes.at(3),';');
+
+        for(int j=0;j<5;j++) {
+            if(j<tamaño) {
+                material[j] = materiales[j];
+            }else {
+                material[j]=" ";
+            }
+        }
+
+        string idUser = to_string(users[contUser].get_id() );
+        for(MaterialBibliografico* mat : biblioteca) {
+            if(mat != nullptr) {
+                string isbn = mat->get_isbn();
+                string idUserInMat = mat->get_id();
+                if(isbn==material[0]&&idUser==idUserInMat) {
+                    mat->set_estado(true);
+                    users[contUser].prestarMaterial(mat);
+                    cont++;
+                }else if(isbn==material[1]&&idUser==idUserInMat) {
+                    mat->set_estado(true);
+                    users[contUser].prestarMaterial(mat);
+                    cont++;
+                }else if(isbn==material[2]&&idUser==idUserInMat) {
+                    mat->set_estado(true);
+                    users[contUser].prestarMaterial(mat);
+                    cont++;
+                }else if(isbn==material[3]&&idUser==idUserInMat) {
+                    mat->set_estado(true);
+                    users[contUser].prestarMaterial(mat);
+                    cont++;
+                }else if(isbn==material[4]&&idUser==idUserInMat) {
+                    mat->set_estado(true);
+                    users[contUser].prestarMaterial(mat);
+                    cont++;
+                }
+            }
+        }
     }
-
     // cerramos el archivo
     MyReadFile.close();
 }
