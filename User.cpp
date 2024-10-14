@@ -12,6 +12,10 @@ User::User(string nombre, int id) {
 
 // implementacion metodos
 
+/*
+ *se evalua si se puede prestar el material al usuario
+ *@MaterialBibliografico *material elemento a prestar
+ */
 void User::prestarMaterial(MaterialBibliografico *material) {
     if (!material->get_estado()) {
         cout << "Material no disponible" << endl;
@@ -28,20 +32,29 @@ void User::prestarMaterial(MaterialBibliografico *material) {
     cout << "El usuario no tiene espacios disponibles para aceptar material" << endl;
 }
 
+/*
+ *se devuelve el material seleccionado dentro del metodo si es que hay en existencia
+ */
 void User::devolverMaterial() {
-    int c = 0;
+
+    int c = 0;//con esto se comprueba si hay elementos en el array materialesPrestados
 
     for (int i = 0; i < 5; i++) {
+        //si el elemento no es nullptr lo muestra
         if (materialesPrestados[i] != nullptr) {
+
             if (c == 0) {
+                //cuando aparece por primera ves un elemento se muestra este mensaje
                 cout << "A continuacion se mostraran los materiales disponibles del usuario" << endl;
                 c=1;
             }
+            //se muestran los datos por consola
             cout << i << ") nombre: " << materialesPrestados[i]->get_nombre() << " autor: " << materialesPrestados[i]->get_autor() <<
                     " isbn: " << materialesPrestados[i]->get_isbn() << endl;
         }
     }
     if(c==0) {
+        //en caso de que no se entrara al
         cout<<"el usuario no tiene materiales disponibles"<<endl;
     }else {
         string isbn ="";
@@ -81,7 +94,9 @@ void User::devolverMaterial() {
         }
     }
 }
-
+/*
+ *
+ */
 void User::devolverTodosLosMateriales() {
     for (int i = 0; i < 5; i++) {
         if (materialesPrestados[i] != nullptr) {
@@ -92,7 +107,7 @@ void User::devolverTodosLosMateriales() {
     }
 }
 
-
+//se mostrara la materiales prestados si es que hay en existencia
 void User::mostrarMaterialesPrestados() {
     int cont = 0; // este contador lo usamos para ver cuantos materiales posee el usuario
 
