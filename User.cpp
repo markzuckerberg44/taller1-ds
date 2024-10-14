@@ -61,12 +61,21 @@ void User::devolverMaterial() {
             isbn = dato;
 
             for(int i=0;i<5;i++) {
-                if(materialesPrestados[i]!=nullptr&&materialesPrestados[i]->get_isbn()==isbn) {
-                    materialesPrestados[i]->set_id("");
-                    materialesPrestados[i]->set_estado(true);
-                    materialesPrestados[i]=nullptr;
-                    c=0;
-                    break;
+                if(materialesPrestados[i]!=nullptr) {
+                    string isbnMaterial="";
+                    for(char letra:materialesPrestados[i]->get_isbn()) {
+                        if(letra!=' ') {
+                            isbnMaterial+=letra;
+                        }
+                    }
+                    if(isbnMaterial==isbn) {
+                        materialesPrestados[i]->set_id("");
+                        materialesPrestados[i]->set_estado(true);
+                        materialesPrestados[i]=nullptr;
+                        c=0;
+                        break;
+                    }
+
                 }
             }
         }
