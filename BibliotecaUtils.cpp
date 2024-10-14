@@ -29,57 +29,52 @@ bool checkIsbn(string isbn, MaterialBibliografico* biblioteca[]) {
     return false;
 }
 
-//retorna puntero de libro o revista si lo encuentra por el nombre
-MaterialBibliografico* buscarPorNombre(string nombre,MaterialBibliografico* biblioteca[]){
-    int c=0;
+//busqueda de nombre o autor
+vector<MaterialBibliografico*> devolverCoincidencias(string dato,MaterialBibliografico* biblioteca[]) {
+    vector<MaterialBibliografico*> coincidencias;
+    if(dato == "") {
+        cout <<"dato ingresado invalido"<<endl;
+        return coincidencias;
+    }
+    string comparacion;
+    for(char& dat : dato) {
+        if(dat != ' ') {
+            if(dat<='Z'&&dat>='A') {
+                comparacion += dat+32;
+            }else {
+                comparacion += dat;
+            }
+        }
+    }
     for(int i = 0; i < 100; i++) {
-        if(biblioteca[i] != nullptr) {
-            c++;
-            if(biblioteca[i]->get_nombre()==nombre) {
-                if(biblioteca[i]->get_estado()) {
-                    return biblioteca[i];
+        if(biblioteca[i]!=nullptr) {
+            string nombre ="";
+            string autor ="";
+            for(char &dat : biblioteca[i]->get_autor()) {
+                if(dat != ' ') {
+                    if(dat<='Z'&&dat>='A') {
+                        autor += dat+32;
+                    }else {
+                        autor += dat;
+                    }
                 }
-                c=-1;
+            }
+            for(char &dat : biblioteca[i]->get_nombre()) {
+                if(dat != ' ') {
+                    if(dat<='Z'&&dat>='A') {
+                        nombre += dat+32;
+                    }else {
+                        nombre += dat;
+                    }
+                }
+            }
+            if(comparacion==nombre||comparacion==autor) {
+                coincidencias.push_back(biblioteca[i]);
             }
         }
     }
-    switch (c) {
-        case -1:
-            cout<<"No hay unidades disponibles"<<endl;
-        break;
-        case 0:
-            cout<<"No hay materiales por el momento"<<endl;
-        break;
-        default:
-            cout<<"Material inexistente"<<endl;
-        break;
-    }
-    return nullptr;
-}
-//retorna puntero de libro o revista si lo encuntra por autor
-MaterialBibliografico* buscarPorAutor(string autor,MaterialBibliografico* biblioteca[]) {
-    int c=0;
-    for(int i = 0; i < 100; i++) {
-        if(biblioteca[i] != nullptr) {
-            c++;
-            if(biblioteca[i]->get_autor()==autor) {
-                if(biblioteca[i]->get_estado()){return biblioteca[i];}
-                c=-1;
-            }
-        }
-    }
-    switch (c) {
-        case -1:
-            cout<<"No hay unidades del autor disponibles"<<endl;
-            break;
-        case 0:
-            cout<<"No hay materiales por el momento"<<endl;
-            break;
-        default:
-            cout<<"Autor inexistente"<<endl;
-            break;
-    }
-    return nullptr;
+    return coincidencias;
+
 }
 
 //busca si hay un usuario por su id
@@ -222,35 +217,30 @@ void BibliotecaUtils::mostrarInfoMateriales() {
 }
 
 void BibliotecaUtils::buscarObj() {
+    cin.ignore(1000, '\n');
+    vector<MaterialBibliografico*> objs;
+    string dato;
+    string espaciar ="-----------------------------------------------------------------";
+    cout<<"Ingrese el nombre o autor del material"<<endl;
+    getline(cin,dato);
+    objs = devolverCoincidencias(dato,biblioteca);
+    if(objs.size()==0) {
+        cout<<"no hay coincidencias"<<endl;
+    }else {
+        if(objs.size()==1) {
+            cout<<espaciar<<endl;
+            objs[0]->mostrarInformacion();
+            cout<<espaciar<<endl;
+        }else {
+            cout<<"Se mostraran las siguientes coincidencias: "<<endl;
 
-    MaterialBibliografico* obj;
-    string titulo, autor;
-    int opcion=0;
-    cout<<"En base a que desea buscar?"<<endl;
-    opcion = opcionDeBusqueda();
-    cin.ignore(1000,'\n');
+            for(MaterialBibliografico* obj:objs) {
+                cout<<espaciar<<endl;
+                obj->mostrarInformacion();
 
-    switch (opcion) {
-        case 1:
-            // titulo
-            cout << "Ingrese titulo:";
-            getline(cin, titulo);
-            obj = buscarPorNombre(titulo, biblioteca);
-            if (obj != nullptr) {
-                obj->mostrarInformacion();
             }
-            break;
-        case 2:
-            //autor
-            cout << "Ingrese autor:";
-            getline(cin, autor);
-            obj = buscarPorAutor(autor, biblioteca);
-            if (obj != nullptr) {
-                obj->mostrarInformacion();
-            }
-            break;
-        default:
-        break;
+            cout<<espaciar<<endl;
+        }
     }
 
 }
@@ -260,7 +250,7 @@ void BibliotecaUtils::gestionUsuarios() {
     int option=0;
     string nombre;
     int id=0;
-    int n = 1;
+    int n = 0;
     cout<<"(1) Crear un usuario"<<endl;
     cout<<"(2) Eliminar un usuario"<<endl;
     cout<<"(3) Buscar un usuario"<<endl;
@@ -327,9 +317,9 @@ void BibliotecaUtils::gestionMateriales() {
     string dato;
     int id=0;
     int indice=-1;
-    int n;
+    int n=0;
     MaterialBibliografico* material;
-
+    vector<MaterialBibliografico*> materiales;
     if(users.empty()) {
         cout<<"No hay usuarios por el momento, por lo que no se pueden hacer los cambios"<<endl; // aqui es la wea
         return;
@@ -338,28 +328,31 @@ void BibliotecaUtils::gestionMateriales() {
     cout<<"(1) Prestamo de material"<<endl;
     cout<<"(2) Devolucion de materiales prestados"<<endl;
     opcion = validarNumeroBiblioteca();
+    cin.ignore(1000,'\n');
     switch (opcion) {
         case 1:
-            cout<<"En base a que deseas buscar?"<<endl;
-            n=opcionDeBusqueda();
-            cin.ignore(1000,'\n');
-            if(n==1) {
-                cout<<"Nombre del material: "<<endl;
-                getline(cin, dato);
-                material=buscarPorNombre(dato,biblioteca);
-            }else {
-                cout<<"Nombre del autor: "<<endl;
-                getline(cin, dato);
-                material=buscarPorAutor(dato,biblioteca);
-            }
-            if(material!=nullptr&&material->get_estado()) {
 
+            cout<<"Ingrese el nombre o autor del material"<<endl;
+            getline(cin,dato);
+            materiales = devolverCoincidencias(dato,biblioteca);
+            if(materiales.size()==0) {
+                cout<<"no hay coincidencias"<<endl;
+            }else {
+                int i=1;
+                for(MaterialBibliografico* mat: materiales) {
+                    cout<<i<<") Nombre: "<<mat->get_nombre()<<" Autor: "<<mat->get_autor()<<endl;
+                    i++;
+                }
+                while (n<1||n>materiales.size()) {
+                    cout<<"Ingrese una de las opciones:\n"<<endl;
+                    n = validarNumeroBiblioteca();
+                }
                 cout<<"Ingrese la id del usuario al que se va hacer el prestamo: ";
                 id=validarNumeroBiblioteca();
                 indice=busquedaPorId(id,users);
                 cin.ignore(1000,'\n');
                 if(indice>-1) {
-                    users[indice].prestarMaterial(material);
+                    users[indice].prestarMaterial(materiales[n-1]);
                 }else {
                     cout<<"Id no existente"<<endl;
                 }
@@ -378,7 +371,8 @@ void BibliotecaUtils::gestionMateriales() {
 
             break;
         default:
-            break;
+            cout<<"opcion no valida"<<endl;
+            opcion = validarNumeroBiblioteca();
     }
 }
 
